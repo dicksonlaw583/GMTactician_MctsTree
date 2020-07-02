@@ -4,6 +4,7 @@ function gmta_mcts_test_all() {
 	var timeA = current_time;
 	
 	/** vv Place tests here vv **/
+	// Synchronous evaluate
 	var state = new TicTacToeState([
 		0, -1, -1,
 		-1, -1, -1,
@@ -12,8 +13,24 @@ function gmta_mcts_test_all() {
 	]);
 	var mcts = new TicTacToeMcts(state);
 	mcts.evaluate(0, 500);
-	assert_equal(mcts.getBestMove(), 4);
+	assert_equal(mcts.getBestMove(), 4, "MCTS synchronous evaluate failed to find best move!");
 	delete mcts;
+	
+	// Asynchronous evaluate
+	var state = new TicTacToeState([
+		-1, -1, -1,
+		-1, -1, -1,
+		1, -1, -1,
+		0
+	]);
+	var mcts = new TicTacToeMcts(state);
+	mcts.evaluateInBackground(0, 500, infinity, function(_move) {
+		var _correctMove = 4;
+		assert_equal(_move, _correctMove, "MCTS asynchronous evaluate failed to find best move!");
+		if (_move == _correctMove) {
+			show_debug_message("MCTS asynchronous evaluate responded correctly!");
+		}
+	});
 	/** ^^ Place tests here ^^ **/
 	
 	var timeB = current_time;

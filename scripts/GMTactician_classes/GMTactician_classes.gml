@@ -165,19 +165,25 @@ function MctsTree(_state) constructor {
 		}
 	};
 	
-	///@func evaluateInBackground(maxPlies, maxPlayouts, <callback>)
+	///@func evaluateInBackground(maxPlies, maxPlayouts, <maxTime>, <callback>)
 	///@param maxPlies Maximum number of plies per playout
 	///@param maxPlayouts Maximum number of playouts to evaluate
-	///@param <callback> (Optional) A method or script to run when the evaluation completes. It will be passed the best chosen move.
+	///@param <maxTime> (Optional) Maximum number of milliseconds to take before returning. Default: No limit.
+	///@param <callback> (Optional) A method or script to run when the evaluation completes. It will be passed the best chosen move, and the daemon will self-destruct unless the method/script returns true.
 	///@desc Evaluate this MCTS tree in the background. Return the instance ID of the daemon.
-	static evaluateInBackground = function(_maxPlies, _maxPlayouts) {
-		var _callback = (argument_count >= 3) ? argument[2] : undefined;
+	static evaluateInBackground = function(_maxPlies, _maxPlayouts, _maxTime, _callback) {
 		var _id;
+		var _tree = self;
+		if (is_undefined(_maxTime)) {
+			_maxTime = infinity;
+		}
 		pliesMax = _maxPlies;
 		pliesLeft = pliesMax;
 		with (instance_create_depth(0, 0, 0, __obj_gmtactician_mcts_daemon__)) {
+			tree = _tree;
 			maxPlayouts = _maxPlayouts;
-			callback = method(other, _callback);
+			maxTime = _maxTime;
+			callback = _callback;
 			_id = id;
 		}
 		return _id;
