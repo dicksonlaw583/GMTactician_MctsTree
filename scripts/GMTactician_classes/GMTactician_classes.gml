@@ -326,10 +326,10 @@ function MctsTree(_state) constructor {
 	
 	#region User configurables (can leave as-is, override or set to an alternative prefab
 	
-	///@func select(node)
+	///@func selectDefault(node)
 	///@param node The node to pick children from
 	///@desc Return the child node with the highest weight.
-	static select = function(_node) {
+	static selectDefault = function(_node) {
 		// Find the node with an undefined weight or the greatest weight of all children
 		var _children = _node.children;
 		var _childrenCount = array_length(_children);
@@ -347,11 +347,12 @@ function MctsTree(_state) constructor {
 		}
 		return _selectedNode;
 	};
+	static select = selectDefault;
 	
-	///@func roll(randomizerNode)
+	///@func rollDefault(randomizerNode)
 	///@param randomizerNode MctsNode with player=undefined
 	///@desc Randomly select a child node, biased according to their weights
-	static roll = function(_node) {
+	static rollDefault = function(_node) {
 		var _rand = random(1);
 		var _currentNodeChildren = _node.children;
 		var _selectedNode = undefined;
@@ -362,40 +363,45 @@ function MctsTree(_state) constructor {
 		}
 		return _selectedNode;
 	};
+	static roll = rollDefault;
 	
-	///@func expand()
+	///@func expandDefault()
 	///@desc Return an array of moves to explore.
-	static expand = function() {
+	static expandDefault = function() {
 		return state.getMoves();
 	};
+	static expand = expandDefault;
 	
-	///@func play()
+	///@func playDefault()
 	///@desc Choose a random move on the given state.
-	static play = function() {
+	static playDefault = function() {
 		var _moves = state.getMoves();
 		return _moves[irandom(array_length(_moves)-1)];
 	};
+	static play = playDefault;
 	
-	///@func interpret(playoutResult, player)
+	///@func interpretDefault(playoutResult, player)
 	///@param playoutResult The result of the playout
 	///@param player The player as whom to evaluate the result
 	///@desc Return a numeric reward from the perspective of the specified player.
-	static interpret = function(_playoutResult, _player) {
+	static interpretDefault = function(_playoutResult, _player) {
 		return lerp(1-_playoutResult, _playoutResult, _player);
 	};
+	static interpret = interpretDefault;
 	
-	///@func reweight(@node, parent, reward)
+	///@func reweightDefault(@node, parent, reward)
 	///@param @node The node to change the weight of
 	///@param parent The node's parent
 	///@param reward The incoming reward value to add
 	///@desc Update the given node's weight and cumulative reward, given the incoming reward
-	static reweight = function(_node, _parent, _reward) {
+	static reweightDefault = function(_node, _parent, _reward) {
 		_node.weight = _node.reward/_node.visits + sqrt(2*ln(_parent.visits+1)/_node.visits);
 	};
+	static reweight = reweightDefault;
 	
-	///@func presample()
+	///@func presampleDefault()
 	///@desc Run state.getRandom() settings.presampleN times, then return [Move m, real weight][]
-	static presample = function() {
+	static presampleDefault = function() {
 		// Set up accumulators
 		var countMap = ds_map_create();
 		var _moves = [];
@@ -424,6 +430,7 @@ function MctsTree(_state) constructor {
 		ds_map_destroy(countMap);
 		return _results;
 	};
+	static presample = presampleDefault;
 	
 	settings = {
 		presampleN: 60
