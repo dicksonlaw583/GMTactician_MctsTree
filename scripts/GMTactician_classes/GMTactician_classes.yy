@@ -3,7 +3,7 @@
   "isCompatibility": false,
   "parent": {
     "name": "GMTactician_MctsTree",
-    "path": "folders/GMTactician_MctsTree.yy",
+    "path": "GMTactician_MctsTree.yyp",
   },
   "resourceVersion": "1.0",
   "name": "GMTactician_classes",
