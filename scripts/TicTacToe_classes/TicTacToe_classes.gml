@@ -63,7 +63,7 @@ function TicTacToeState(_board) constructor {
 	static getPlayoutResult = function() {
 		// Diagonals
 		if (board[4] >= 0) {
-			if (board[0] == board[4] && board[4] == board[7]) return [board[0], 0, 4, 7];
+			if (board[0] == board[4] && board[4] == board[8]) return [board[0], 0, 4, 8];
 			if (board[2] == board[4] && board[4] == board[6]) return [board[2], 2, 4, 6];
 		}
 		
