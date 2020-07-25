@@ -24,11 +24,12 @@ function gmta_mcts_test_all() {
 		0
 	]);
 	var mcts = new TicTacToeMcts(state);
-	mcts.evaluateInBackground(0, 500, infinity, function(_move) {
+	mcts.evaluateInBackground(0, 1000, infinity, function(_move) {
 		var _correctMove = 4;
 		assert_equal(_move, _correctMove, "MCTS asynchronous evaluate failed to find best move!");
 		if (_move == _correctMove) {
 			show_debug_message("MCTS asynchronous evaluate responded correctly!");
+			layer_background_blend(layer_background_get_id(layer_get_id("Background")), c_green);
 		}
 	});
 	/** ^^ Place tests here ^^ **/

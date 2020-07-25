@@ -7,4 +7,4 @@ fails += gmta_mcts_test_all();
 	
 var timeB = current_time;
 show_debug_message("GMTactician tests completed in " + string(timeB-timeA) + "ms.");
-layer_background_blend(layer_background_get_id(layer_get_id("Background")), (fails == 0) ? c_green : c_red);
+layer_background_blend(layer_background_get_id(layer_get_id("Background")), (fails == 0) ? c_yellow : c_red);
