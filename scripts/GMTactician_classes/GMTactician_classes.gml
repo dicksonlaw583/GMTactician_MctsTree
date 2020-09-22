@@ -538,6 +538,7 @@ function MctsTree(_state) constructor {
 	///@param reward The incoming reward value to add
 	///@desc Update the given node's UCT weight and cumulative reward, given the incoming reward and settings.uctC
 	static reweightUct = function(_node, _parent, _reward) {
+		_node.weight = _node.reward/_node.visits + settings.uctC*sqrt(ln(_parent.visits+1)/_node.visits);
 	};
 	#endregion
 }
