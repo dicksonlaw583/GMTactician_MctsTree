@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "TicTacToe",
-    "path": "folders/TicTacToe.yy",
+    "name": "GMTactician_Games",
+    "path": "folders/Libraries/GMTactician_Games.yy",
   },
   "resourceVersion": "1.0",
   "name": "TicTacToe_classes",

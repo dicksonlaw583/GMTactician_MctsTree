@@ -86,9 +86,3 @@ function TicTacToeState(_board) constructor {
 		return [0.5, undefined, undefined, undefined];
 	};
 }
-
-function TicTacToeMcts(_state) : MctsTree(_state) constructor {
-	static interpret = function(_pr, _player) {
-		return lerp(1-_pr[0], _pr[0], _player);
-	};
-}

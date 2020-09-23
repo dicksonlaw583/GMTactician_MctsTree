@@ -2,11 +2,11 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "GMTactician_MctsTree",
-    "path": "GMTactician_MctsTree.yyp",
+    "name": "GMAssert",
+    "path": "folders/Libraries_config/GMAssert.yy",
   },
   "resourceVersion": "1.0",
-  "name": "GMTactician_classes",
+  "name": "__GMA_SETTINGS__",
   "tags": [],
   "resourceType": "GMScript",
 }
