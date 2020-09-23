@@ -5,6 +5,7 @@
     {"id":{"name":"TicTacToe_classes","path":"scripts/TicTacToe_classes/TicTacToe_classes.yy",},"order":0,},
     {"id":{"name":"GMTactician_classes","path":"scripts/GMTactician_classes/GMTactician_classes.yy",},"order":1,},
     {"id":{"name":"__obj_gmtactician_mcts_daemon__","path":"objects/__obj_gmtactician_mcts_daemon__/__obj_gmtactician_mcts_daemon__.yy",},"order":0,},
+    {"id":{"name":"IntransitiveDice_classes","path":"scripts/IntransitiveDice_classes/IntransitiveDice_classes.yy",},"order":0,},
     {"id":{"name":"__GMA_BREAKPOINT__","path":"scripts/__GMA_BREAKPOINT__/__GMA_BREAKPOINT__.yy",},"order":0,},
     {"id":{"name":"rmTest","path":"rooms/rmTest/rmTest.yy",},"order":0,},
   ],
@@ -38,6 +39,7 @@
     {"folderPath":"folders/GMTactician_MctsTree_test.yy","order":1,"resourceVersion":"1.0","name":"GMTactician_MctsTree_test","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/GMAssert.yy","order":5,"resourceVersion":"1.0","name":"GMAssert","tags":[],"resourceType":"GMFolder",},
     {"folderPath":"folders/TicTacToe.yy","order":6,"resourceVersion":"1.0","name":"TicTacToe","tags":[],"resourceType":"GMFolder",},
+    {"folderPath":"folders/IntransitiveDice.yy","order":7,"resourceVersion":"1.0","name":"IntransitiveDice","tags":[],"resourceType":"GMFolder",},
   ],
   "AudioGroups": [
     {"targets":461609314234257646,"resourceVersion":"1.0","name":"audiogroup_default","resourceType":"GMAudioGroup",},

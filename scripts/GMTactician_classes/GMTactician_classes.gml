@@ -156,10 +156,10 @@ function MctsTree(_state) constructor {
 			// Increment its visits count
 			var _node = selectPath[i];
 			++_node.visits;
-			var _reward = interpret(_playoutResult, _node.lastPlayer);
-			_node.reward += _reward;
 			// Update the node's weight if it is not a randomizer node
 			if (!is_undefined(_node.lastPlayer)) {
+				var _reward = interpret(_playoutResult, _node.lastPlayer);
+				_node.reward += _reward;
 				reweight(_node, _parentNode, _reward);
 			}
 		}

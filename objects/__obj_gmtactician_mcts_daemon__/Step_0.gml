@@ -19,7 +19,6 @@ if (is_struct(tree) && !ready) {
 		ready = true;
 		progress = 1;
 		// If the callback is given, run it and self-destruct
-		show_debug_message(tree.getRankedMoves());
 		bestMove = tree.getBestMove();
 		if (!is_undefined(callback)) {
 			if (is_method(callback)) {
