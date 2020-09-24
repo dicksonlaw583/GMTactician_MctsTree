@@ -439,7 +439,7 @@ function MctsTree(_state) constructor {
 	static presample = presampleDefault;
 	
 	settings = {
-		presampleN: 60
+		presampleN: MCTS_DEFAULT_PRESAMPLE_N
 	};
 	#endregion
 	
