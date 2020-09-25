@@ -12,7 +12,7 @@ function MctsTree(_state) constructor {
 	
 	#region Evaluation
 	///@func evaluate(maxPlies, maxPlayouts, <maxTime>)
-	///@param {int} maxPlies Maximum number of plies per playout
+	///@param {int} maxPlies Maximum number of plies per playout (0 for unlimited)
 	///@param {int} maxPlayouts Maximum number of playouts to evaluate
 	///@param {int} <maxTime> (Optional) Maximum number of milliseconds to take before returning. Default: No limit.
 	///@desc Evaluate this MCTS tree for up to the given number of playouts. Return the number of playouts actually done.
@@ -172,7 +172,7 @@ function MctsTree(_state) constructor {
 	};
 	
 	///@func evaluateInBackground(maxPlies, maxPlayouts, <maxTime>, <callback>)
-	///@param {int} maxPlies Maximum number of plies per playout
+	///@param {int} maxPlies Maximum number of plies per playout (0 for unlimited)
 	///@param {int} maxPlayouts Maximum number of playouts to evaluate
 	///@param {int|undefined} <maxTime> (Optional) Maximum number of milliseconds to take before returning. Default: No limit.
 	///@param {method|undefined} <callback> (Optional) A method or script to run when the evaluation completes. It will be passed the best chosen move, and the daemon will self-destruct unless the method/script returns true.
@@ -275,7 +275,7 @@ function MctsTree(_state) constructor {
 	
 	///@func getBestMoveSequence(<n>)
 	///@param {int|undefined} <n> (Optional) Maximum number of moves after the root state to read
-	///@desc Return an array of moves that the MCTS tree believes is optimal for all players.
+	///@desc Return an array of moves in sequence that the MCTS tree believes is optimal for all players.
 	static getBestMoveSequence = function(_n) {
 		if (is_undefined(_n)) {
 			_n = infinity;
@@ -408,7 +408,7 @@ function MctsTree(_state) constructor {
 	///@param {MctsNode} @node The node to change the weight of
 	///@param {MctsNode} parent The node's parent
 	///@param {real} reward The incoming reward value to add
-	///@desc Update the given node's weight and cumulative reward, given the incoming reward
+	///@desc Update the given node's weight, given the incoming reward
 	static reweightDefault = function(_node, _parent, _reward) {
 		_node.weight = _node.reward/_node.visits + sqrt(2*ln(_parent.visits+1)/_node.visits);
 	};
