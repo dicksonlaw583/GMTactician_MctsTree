@@ -503,6 +503,21 @@ function MctsTree(_state) constructor {
 		return _moves;
 	};
 	
+	///@func expandFrac()
+	///@desc Return settings.expandFrac of the array of moves to explore. Should be between 0-1.
+	static expandFrac = function() {
+		var _moves = state.getMoves();
+		var _movesN = array_length(_moves);
+		for (var i = _movesN-1; i >= 1; --i) {
+			var j = irandom(i);
+			var _temp = _moves[i];
+			_moves[@i] = _moves[j];
+			_moves[@j] = _temp;
+		}
+		array_resize(_moves, ceil(settings.expandFrac*_movesN));
+		return _moves;
+	};
+	
 	///@func playNth()
 	///@desc Always use the (settings.playNth)-th move given by state.getMoves() (or the closest to it if there aren't enough moves).
 	static playNth = function() {
