@@ -9,11 +9,11 @@ Best strategy for second player: 0 to beat 1, 1 to beat 2, 2 to beat 0
 Source: https://en.wikipedia.org/wiki/Nontransitive_dice#Example
 */
 
-///@func IntransitiveDiceState(<player>)
-///@param <player> (Optional) The first player to play (chosen at random if not given)
+///@func IntransitiveDiceState(player)
+///@param player (Optional) The first player to play (chosen at random if not given)
 ///@desc A state for the intransitive dice game described above
-function IntransitiveDiceState(_firstPlayer) constructor {
-	currentPlayer = is_undefined(_firstPlayer) ? choose(0, 1) : _firstPlayer;
+function IntransitiveDiceState(player=choose(0, 1)) constructor {
+	currentPlayer = player;
 	phase = 0; //0=picking, 1=rolling, 2=done
 	picks = [undefined, undefined]; //0,1,2
 	rolls = [undefined, undefined];

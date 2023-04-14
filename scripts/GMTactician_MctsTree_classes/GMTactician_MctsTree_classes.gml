@@ -1,32 +1,29 @@
 ///@func MctsTree(state)
 ///@param state The State struct to root at
 ///@desc An MCTS Tree --- Developers should inherit off this and optionally configure the prefabs
-function MctsTree(_state) constructor {
-	root = new MctsNode(undefined, _state.getCurrentPlayer(), undefined); //MctsNode
-	rootMemo = _state.getMemo(); //Memo
-	state = _state.clone(); //State
+function MctsTree(state) constructor {
+	root = new MctsNode(undefined, state.getCurrentPlayer(), undefined); //MctsNode
+	rootMemo = state.getMemo(); //Memo
+	self.state = state.clone(); //State
 	selectPath = []; //MctsNode[]
 	isPlayingOut = false;
 	pliesMax = 0;
 	pliesLeft = 0;
 	
 	#region Evaluation
-	///@func evaluate(maxPlies, maxPlayouts, <maxTime>)
-	///@param {int} maxPlies Maximum number of plies per playout (0 for unlimited)
-	///@param {int} maxPlayouts Maximum number of playouts to evaluate
-	///@param {int} <maxTime> (Optional) Maximum number of milliseconds to take before returning. Default: No limit.
+	///@func evaluate(maxPlies, maxPlayouts, [maxTime])
+	///@param {Real} maxPlies Maximum number of plies per playout (0 for unlimited)
+	///@param {Real} maxPlayouts Maximum number of playouts to evaluate
+	///@param {Real} [maxTime] (Optional) Maximum number of milliseconds to take before returning. Default: No limit.
 	///@desc Evaluate this MCTS tree for up to the given number of playouts. Return the number of playouts actually done.
-	static evaluate = function(_maxPlies, _maxPlayouts, _maxTime) {
-		pliesMax = _maxPlies;
+	static evaluate = function(maxPlies, maxPlayouts, maxTime=infinity) {
+		pliesMax = maxPlies;
 		pliesLeft = pliesMax;
-		if (is_undefined(_maxTime)) {
-			_maxTime = infinity;
-		}
 		var _startTime = current_time;
 		var _playouts = 0;
 		do {
 			_playouts += evaluateTick();
-		} until (_playouts >= _maxPlayouts || (current_time-_startTime) >= _maxTime);
+		} until (_playouts >= maxPlayouts || (current_time-_startTime) >= maxTime);
 		return _playouts;
 	};
 	
@@ -97,7 +94,9 @@ function MctsTree(_state) constructor {
 		while (!is_undefined(_currentNode.children)) {
 			// Don't continue expanding leaf nodes
 			var _currentNodeChildren = _currentNode.children;
+			///Feather disable GM1041
 			var _currentNodeChildrenN = array_length(_currentNodeChildren);
+			///Feather enable GM1041
 			if (_currentNodeChildrenN == 0) break;
 			// Append the selected node to the path (random weighted if randomizer to play, weighting strategy if standard player to play)
 			var _selectedNode = is_undefined(_currentNode.player) ? roll(_currentNode) : select(_currentNode);
@@ -172,24 +171,21 @@ function MctsTree(_state) constructor {
 	};
 	
 	///@func evaluateInBackground(maxPlies, maxPlayouts, <maxTime>, <callback>)
-	///@param {int} maxPlies Maximum number of plies per playout (0 for unlimited)
-	///@param {int} maxPlayouts Maximum number of playouts to evaluate
-	///@param {int|undefined} <maxTime> (Optional) Maximum number of milliseconds to take before returning. Default: No limit.
-	///@param {method|undefined} <callback> (Optional) A method or script to run when the evaluation completes. It will be passed the best chosen move, and the daemon will self-destruct unless the method/script returns true.
+	///@param {Real} maxPlies Maximum number of plies per playout (0 for unlimited)
+	///@param {Real} maxPlayouts Maximum number of playouts to evaluate
+	///@param {Real,Undefined} <maxTime> (Optional) Maximum number of milliseconds to take before returning. Default: No limit.
+	///@param {Function,Undefined} <callback> (Optional) A method or script to run when the evaluation completes. It will be passed the best chosen move, and the daemon will self-destruct unless the method/script returns true.
 	///@desc Evaluate this MCTS tree in the background. Return the instance ID of the daemon.
-	static evaluateInBackground = function(_maxPlies, _maxPlayouts, _maxTime, _callback) {
+	static evaluateInBackground = function(maxPlies, maxPlayouts, maxTime=infinity, callback=undefined) {
 		var _id;
 		var _tree = self;
-		if (is_undefined(_maxTime)) {
-			_maxTime = infinity;
-		}
-		pliesMax = _maxPlies;
+		pliesMax = maxPlies;
 		pliesLeft = pliesMax;
 		with (instance_create_depth(0, 0, 0, __obj_gmtactician_mcts_daemon__)) {
-			tree = _tree;
-			maxPlayouts = _maxPlayouts;
-			maxTime = _maxTime;
-			callback = _callback;
+			self.tree = _tree;
+			self.maxPlayouts = maxPlayouts;
+			self.maxTime = maxTime;
+			self.callback = callback;
 			_id = id;
 		}
 		return _id;
@@ -207,11 +203,11 @@ function MctsTree(_state) constructor {
 	
 	#region Picking / Making Moves
 	///@func reroot(moves)
-	///@param {Move[]} moves Array of moves to make next
+	///@param {Array} moves Array of moves to make next
 	///@desc Re-root the tree to the state that results from making the given sequence of moves from the root state. Return whether some part of the subtree is still valid.
-	static reroot = function(_moves) {
+	static reroot = function(moves) {
 		evaluateReset();
-		var _movesN = array_length(_moves);
+		var _movesN = array_length(moves);
 		for (var i = 0; i < _movesN; ++i) {
 			var _move = _moves[i];
 			var _moveString = string(_move);
@@ -226,7 +222,9 @@ function MctsTree(_state) constructor {
 						if (string(_oldRootChild.move) == _moveString) {
 							_newRoot = _oldRootChild;
 						} else {
+							///Feather disable GM1052
 							delete _oldRootChild;
+							///Feather enable GM1052
 						}
 					}
 				}
@@ -246,11 +244,11 @@ function MctsTree(_state) constructor {
 	};
 	
 	///@func _getBestChild(node)
-	///@param {MctsNode} node
+	///@param {Struct.MctsNode} node
 	///@desc Return the best child of the given node, in terms of visits.
-	static _getBestChild = function(_node) {
+	static _getBestChild = function(node) {
 		var _bestNode = undefined;
-		var _children = _node.children;
+		var _children = node.children;
 		if (is_array(_children) && array_length(_children) > 0) {
 			_bestNode = _children[0];
 			var _bestVisits = _bestNode.visits;
@@ -273,17 +271,14 @@ function MctsTree(_state) constructor {
 		return is_undefined(_bestNode) ? undefined : _bestNode.move;
 	};
 	
-	///@func getBestMoveSequence(<n>)
-	///@param {int|undefined} <n> (Optional) Maximum number of moves after the root state to read
+	///@func getBestMoveSequence(n)
+	///@param {Real} n (Optional) Maximum number of moves after the root state to read
 	///@desc Return an array of moves in sequence that the MCTS tree believes is optimal for all players.
-	static getBestMoveSequence = function(_n) {
-		if (is_undefined(_n)) {
-			_n = infinity;
-		}
+	static getBestMoveSequence = function(n=infinity) {
 		var _sequence = [];
 		var _currentNode = root;
 		var ii = 0;
-		while (_n--) {
+		while (n--) {
 			var _bestNode = _getBestChild(_currentNode);
 			if (is_undefined(_bestNode)) return _sequence;
 			_sequence[@ii++] = _bestNode.move;
@@ -292,46 +287,42 @@ function MctsTree(_state) constructor {
 		return _sequence;
 	};
 	
-	///@func getRankedMoves(<n>)
-	///@param {int|undefined} <n> (Optional) Maximum number of different moves to consider
+	///@func getRankedMoves(n)
+	///@param {Real} n (Optional) Maximum number of different moves to consider
 	///@desc Return an array of moves, ranked top-to-bottom by how good the MCTS tree thinks it is (i.e. number of visits)
-	static getRankedMoves = function(_n) {
+	static getRankedMoves = function(n=infinity) {
 		var _children = root.children;
 		if (is_undefined(_children)) return [];
 		var _childrenN = array_length(_children);
-		if (is_undefined(_n)) {
-			_n = _childrenN;
-		}
-		var _rankings = array_create(_n);
+		var _rankingsN = min(n, _childrenN);
+		var _rankings = array_create(_rankingsN);
 		var pq = ds_priority_create();
 		for (var i = _childrenN-1; i >= 0; --i) {
 			var _child = _children[i];
 			ds_priority_add(pq, _child.move, _child.visits);
 		}
-		for (var i = 0; i < _n; ++i) {
+		for (var i = 0; i < _rankingsN; ++i) {
 			_rankings[@i] = ds_priority_delete_max(pq);
 		}
 		ds_priority_destroy(pq);
 		return _rankings;
 	};
 	
-	///@func getRankedMovesVerbose(<n>)
-	///@param {int|undefined} <n> (Optional) Maximum number of different moves to consider
+	///@func getRankedMovesVerbose(n)
+	///@param {Real,Undefined} n (Optional) Maximum number of different moves to consider
 	///@desc Return a 2D array of moves and associated properties; each row is [<move>, <number of visits>, <equity>, <weight>]
-	static getRankedMovesVerbose = function(_n) {
+	static getRankedMovesVerbose = function(n=infinity) {
 		var _children = root.children;
 		if (is_undefined(_children)) return [];
 		var _childrenN = array_length(_children);
-		if (is_undefined(_n)) {
-			_n = _childrenN;
-		}
-		var _rankings = array_create(_n);
+		var _rankingsN = min(n, _childrenN);
+		var _rankings = array_create(_rankingsN);
 		var pq = ds_priority_create();
 		for (var i = _childrenN-1; i >= 0; --i) {
 			var _child = _children[i];
 			ds_priority_add(pq, [_child.move, _child.visits, (_child.visits) ? (_child.reward/_child.visits) : 0, _child.weight], _child.visits);
 		}
-		for (var i = 0; i < _n; ++i) {
+		for (var i = 0; i < _rankingsN; ++i) {
 			_rankings[@i] = ds_priority_delete_max(pq);
 		}
 		ds_priority_destroy(pq);
@@ -342,11 +333,11 @@ function MctsTree(_state) constructor {
 	#region User configurables (can leave as-is, override or set to an alternative prefab
 	
 	///@func selectDefault(node)
-	///@param {MctsNode} node The node to pick children from
+	///@param {Struct.MctsNode} node The node to pick children from
 	///@desc Return the child node with the highest weight.
-	static selectDefault = function(_node) {
+	static selectDefault = function(node) {
 		// Find the node with an undefined weight or the greatest weight of all children
-		var _children = _node.children;
+		var _children = node.children;
 		var _childrenCount = array_length(_children);
 		var _selectedNode = _children[_childrenCount-1];
 		var _selectedNodeWeight = _selectedNode.weight;
@@ -364,12 +355,12 @@ function MctsTree(_state) constructor {
 	};
 	static select = selectDefault;
 	
-	///@func rollDefault(randomizerNode)
-	///@param {MctsNode} randomizerNode MctsNode with player=undefined
+	///@func rollDefault(randNode)
+	///@param {Struct.MctsNode} randNode MctsNode with player=undefined
 	///@desc Randomly select a child node, biased according to their weights
-	static rollDefault = function(_node) {
+	static rollDefault = function(randNode) {
 		var _rand = random(1);
-		var _currentNodeChildren = _node.children;
+		var _currentNodeChildren = randNode.children;
 		var _selectedNode = undefined;
 		for (var i = array_length(_currentNodeChildren)-1; i >= 0; --i) {
 			_selectedNode = _currentNodeChildren[i];
@@ -396,21 +387,21 @@ function MctsTree(_state) constructor {
 	static play = playDefault;
 	
 	///@func interpretDefault(playoutResult, player)
-	///@param {PlayoutResult} playoutResult The result of the playout
-	///@param {Player} player The player as whom to evaluate the result
+	///@param {Any} playoutResult The result of the playout
+	///@param {Any} player The player as whom to evaluate the result
 	///@desc Return a numeric reward from the perspective of the specified player.
-	static interpretDefault = function(_playoutResult, _player) {
-		return lerp(1-_playoutResult, _playoutResult, _player);
+	static interpretDefault = function(playoutResult, player) {
+		return lerp(1-playoutResult, playoutResult, player);
 	};
 	static interpret = interpretDefault;
 	
-	///@func reweightDefault(@node, parent, reward)
-	///@param {MctsNode} @node The node to change the weight of
-	///@param {MctsNode} parent The node's parent
+	///@func reweightDefault(node, parent, reward)
+	///@param {Struct.MctsNode} node The node to change the weight of
+	///@param {Struct.MctsNode} parent The node's parent
 	///@param {real} reward The incoming reward value to add
 	///@desc Update the given node's weight, given the incoming reward
-	static reweightDefault = function(_node, _parent, _reward) {
-		_node.weight = _node.reward/_node.visits + sqrt(2*ln(_parent.visits+1)/_node.visits);
+	static reweightDefault = function(node, parent, reward) {
+		node.weight = node.reward/node.visits + sqrt(2*ln(parent.visits+1)/node.visits);
 	};
 	static reweight = reweightDefault;
 	
@@ -454,10 +445,10 @@ function MctsTree(_state) constructor {
 	
 	#region Alternative Prefabs
 	///@func selectNoisy(node)
-	///@param {MctsNode} node The node to pick children from
+	///@param {Struct.MctsNode} node The node to pick children from
 	///@desc Choose a random child settings.selectNoise amount of the time (should be in [0, 1]), and the highest weighted child the rest of the time.
-	static selectNoisy = function(_node) {
-		var _nodeChildren = _node.children;
+	static selectNoisy = function(node) {
+		var _nodeChildren = node.children;
 		if (is_undefined(_nodeChildren)) return undefined;
 		var _nodeChildrenN = array_length(_nodeChildren)-1;
 		if (random(1) < settings.selectNoise) {
@@ -482,10 +473,10 @@ function MctsTree(_state) constructor {
 	};
 	
 	///@func rollUniform(node)
-	///@param {MctsNode} node The node to pick random children from
+	///@param {Struct.MctsNode} node The node to pick random children from
 	///@desc Choose each children at uniform distribution, ignore their weights
-	static rollUniform = function(_node) {
-		var _nodeChildren = _node.children;
+	static rollUniform = function(node) {
+		var _nodeChildren = node.children;
 		var _nodeChildrenN = array_length(_nodeChildren);
 		return _nodeChildren(irandom(_nodeChildrenN-1)) ;
 	};
@@ -553,26 +544,26 @@ function MctsTree(_state) constructor {
 		return _chosenMove;
 	};
 	
-	///@func reweightUct(@node, parent, reward)
-	///@param {MctsNode} @node The node to change the weight of
-	///@param {MctsNode} parent The node's parent
+	///@func reweightUct(node, parent, reward)
+	///@param {Struct.MctsNode} node The node to change the weight of
+	///@param {Struct.MctsNode} parent The node's parent
 	///@param {real} reward The incoming reward value to add
 	///@desc Update the given node's UCT weight and cumulative reward, given the incoming reward and settings.uctC
-	static reweightUct = function(_node, _parent, _reward) {
-		_node.weight = _node.reward/_node.visits + settings.uctC*sqrt(ln(_parent.visits+1)/_node.visits);
+	static reweightUct = function(node, parent, reward) {
+		node.weight = node.reward/node.visits + settings.uctC*sqrt(ln(parent.visits+1)/node.visits);
 	};
 	#endregion
 }
 
 ///@func MctsNode(move, lastPlayer, player)
-///@param {Move} move The Move this node represents
-///@param {Player|undefined} lastPlayer The preceding player
-///@param {Player|undefined} player The current player
+///@param {Any} move The Move this node represents
+///@param {Any} lastPlayer The preceding player
+///@param {Any} player The current player
 ///@desc An MCTS Tree Node
-function MctsNode(_move, _lastPlayer, _player) constructor {
-	move = _move;
-	lastPlayer = _lastPlayer;
-	player = _player;
+function MctsNode(move, lastPlayer, player) constructor {
+	self.move = move;
+	self.lastPlayer = lastPlayer;
+	self.player = player;
 	weight = undefined;
 	reward = 0;
 	visits = 0;

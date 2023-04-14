@@ -11,8 +11,8 @@ Current player: 9
  
  X=1, O=0, <empty>=-1
 **/
-function TicTacToeState(_board) constructor {
-	board = _board;
+function TicTacToeState(board) constructor {
+	self.board = board;
 	
 	static readMemo = function(memo) {
 		array_copy(board, 0, memo, 0, 10);
