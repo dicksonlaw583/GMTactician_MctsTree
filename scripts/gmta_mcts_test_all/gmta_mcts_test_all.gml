@@ -5,7 +5,7 @@ function gmta_mcts_test_all() {
 	var state, mcts;
 	
 	/** vv Place tests here vv **/
-	// Synchronous evaluate Tic-Tac-Toe
+	// Synchronous evaluate Tic-Tac-Toe (1 to play)
 	state = new TicTacToeState([
 		0, -1, -1,
 		-1, -1, -1,
@@ -14,10 +14,25 @@ function gmta_mcts_test_all() {
 	]);
 	mcts = new TicTacToeMcts(state);
 	mcts.evaluate(0, 500);
-	assert_equal(mcts.getBestMove(), 4, "MCTS synchronous evaluate failed to find best move for Tic-Tac-Toe!");
-	assert_equal(mcts.getBestMoveSequence()[0], 4, "MCTS synchronous evaluate failed to find best move sequence for Tic-Tac-Toe!");
-	assert_equal(mcts.getRankedMoves()[0], 4, "MCTS synchronous evaluate failed to find ranked moves for Tic-Tac-Toe!");
-	assert_equal(mcts.getRankedMovesVerbose()[0][0], 4, "MCTS synchronous evaluate failed to find verbose ranked moves for Tic-Tac-Toe!");
+	assert_equal(mcts.getBestMove(), 4, "MCTS synchronous evaluate failed to find best move for Tic-Tac-Toe 1!");
+	assert_equal(mcts.getBestMoveSequence()[0], 4, "MCTS synchronous evaluate failed to find best move sequence for Tic-Tac-Toe 1!");
+	assert_equal(mcts.getRankedMoves()[0], 4, "MCTS synchronous evaluate failed to find ranked moves for Tic-Tac-Toe 1!");
+	assert_equal(mcts.getRankedMovesVerbose()[0][0], 4, "MCTS synchronous evaluate failed to find verbose ranked moves for Tic-Tac-Toe 1!");
+	delete mcts;
+	
+	// Synchronous evaluate Tic-Tac-Toe (0 to play)
+	state = new TicTacToeState([
+		1, -1, -1,
+		-1, -1, -1,
+		-1, -1, -1,
+		0
+	]);
+	mcts = new TicTacToeMcts(state);
+	mcts.evaluate(0, 500);
+	assert_equal(mcts.getBestMove(), 4, "MCTS synchronous evaluate failed to find best move for Tic-Tac-Toe 2!");
+	assert_equal(mcts.getBestMoveSequence()[0], 4, "MCTS synchronous evaluate failed to find best move sequence for Tic-Tac-Toe 2!");
+	assert_equal(mcts.getRankedMoves()[0], 4, "MCTS synchronous evaluate failed to find ranked moves for Tic-Tac-Toe 2!");
+	assert_equal(mcts.getRankedMovesVerbose()[0][0], 4, "MCTS synchronous evaluate failed to find verbose ranked moves for Tic-Tac-Toe 2!");
 	delete mcts;
 	
 	// Synchronous evaluate Intransitive Dice 0
