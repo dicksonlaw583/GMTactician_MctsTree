@@ -15,6 +15,9 @@ function gmta_mcts_test_all() {
 	mcts = new TicTacToeMcts(state);
 	mcts.evaluate(0, 500);
 	assert_equal(mcts.getBestMove(), 4, "MCTS synchronous evaluate failed to find best move for Tic-Tac-Toe!");
+	assert_equal(mcts.getBestMoveSequence()[0], 4, "MCTS synchronous evaluate failed to find best move sequence for Tic-Tac-Toe!");
+	assert_equal(mcts.getRankedMoves()[0], 4, "MCTS synchronous evaluate failed to find ranked moves for Tic-Tac-Toe!");
+	assert_equal(mcts.getRankedMovesVerbose()[0][0], 4, "MCTS synchronous evaluate failed to find verbose ranked moves for Tic-Tac-Toe!");
 	delete mcts;
 	
 	// Synchronous evaluate Intransitive Dice 0
@@ -23,6 +26,9 @@ function gmta_mcts_test_all() {
 	mcts = new IntransitiveDiceMcts(state);
 	mcts.evaluate(0, 600);
 	assert_equal(mcts.getBestMove(), 2, "MCTS synchronous evaluate failed to find best move against Intransitive Dice 0!");
+	assert_equal(mcts.getBestMoveSequence()[0], 2, "MCTS synchronous evaluate failed to find best move sequence against Intransitive Dice 0!");
+	assert_equal(mcts.getRankedMoves(), [2, 1], "MCTS synchronous evaluate failed to find ranked moves against Intransitive Dice 0!");
+	assert_equal([mcts.getRankedMovesVerbose()[0][0], mcts.getRankedMovesVerbose()[1][0]], [2, 1], "MCTS synchronous evaluate failed to find verbose ranked moves against Intransitive Dice 0!");
 	delete mcts;
 	
 	// Synchronous evaluate Intransitive Dice 1
@@ -31,6 +37,9 @@ function gmta_mcts_test_all() {
 	mcts = new IntransitiveDiceMcts(state);
 	mcts.evaluate(0, 600);
 	assert_equal(mcts.getBestMove(), 0, "MCTS synchronous evaluate failed to find best move against Intransitive Dice 1!");
+	assert_equal(mcts.getBestMoveSequence()[0], 0, "MCTS synchronous evaluate failed to find best move sequence against Intransitive Dice 1!");
+	assert_equal(mcts.getRankedMoves(), [0, 2], "MCTS synchronous evaluate failed to find ranked moves against Intransitive Dice 1!");
+	assert_equal([mcts.getRankedMovesVerbose()[0][0], mcts.getRankedMovesVerbose()[1][0]], [0, 2], "MCTS synchronous evaluate failed to find verbose ranked moves against Intransitive Dice 1!");
 	delete mcts;
 	
 	// Synchronous evaluate Intransitive Dice 2
@@ -39,6 +48,9 @@ function gmta_mcts_test_all() {
 	mcts = new IntransitiveDiceMcts(state);
 	mcts.evaluate(0, 600);
 	assert_equal(mcts.getBestMove(), 1, "MCTS synchronous evaluate failed to find best move against Intransitive Dice 2!");
+	assert_equal(mcts.getBestMoveSequence()[0], 1, "MCTS synchronous evaluate failed to find best move sequence against Intransitive Dice 2!");
+	assert_equal(mcts.getRankedMoves(), [1, 0], "MCTS synchronous evaluate failed to find ranked moves against Intransitive Dice 2!");
+	assert_equal([mcts.getRankedMovesVerbose()[0][0], mcts.getRankedMovesVerbose()[1][0]], [1, 0], "MCTS synchronous evaluate failed to find verbose ranked moves against Intransitive Dice 2!");
 	delete mcts;
 	/** ^^ Place tests here ^^ **/
 	

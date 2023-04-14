@@ -164,7 +164,6 @@ function MctsTree(state) constructor {
 			// Update the node's weight if it is not a randomizer node
 			if (!is_undefined(_node.lastPlayer)) {
 				var _reward = interpret(_playoutResult, _node.lastPlayer);
-				_node.reward += _reward;
 				reweight(_node, _parentNode, _reward);
 			}
 		}
@@ -401,6 +400,7 @@ function MctsTree(state) constructor {
 	///@param {real} reward The incoming reward value to add
 	///@desc Update the given node's weight, given the incoming reward
 	static reweightDefault = function(node, parent, reward) {
+		node.reward += reward;
 		node.weight = node.reward/node.visits + sqrt(2*ln(parent.visits+1)/node.visits);
 	};
 	static reweight = reweightDefault;
@@ -550,6 +550,7 @@ function MctsTree(state) constructor {
 	///@param {real} reward The incoming reward value to add
 	///@desc Update the given node's UCT weight and cumulative reward, given the incoming reward and settings.uctC
 	static reweightUct = function(node, parent, reward) {
+		node.reward += reward;
 		node.weight = node.reward/node.visits + settings.uctC*sqrt(ln(parent.visits+1)/node.visits);
 	};
 	#endregion
