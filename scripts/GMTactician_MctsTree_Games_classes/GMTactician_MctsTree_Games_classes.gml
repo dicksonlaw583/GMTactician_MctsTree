@@ -18,7 +18,7 @@ function TicTacToeMcts(state) : MctsTree(state) constructor {
 function IntransitiveDiceMcts(state) : MctsTree(state) constructor {
 	///@func presample()
 	///@return {Array<Array<Real>>}
-	///@desc ///@desc Return an array of move-probability pairs for this game.
+	///@desc Return an array of move-probability pairs for this game.
 	static presample = function() {
 		switch (state.picks[state.currentPlayer]) {
 			case 0: return [[2, 1/3], [4, 1/3], [9, 1/3]];
