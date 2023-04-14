@@ -388,6 +388,7 @@ function MctsTree(state) constructor {
 	///@func interpretDefault(playoutResult, player)
 	///@param {Any} playoutResult The result of the playout
 	///@param {Any} player The player as whom to evaluate the result
+	///@return {Real}
 	///@desc Return a numeric reward from the perspective of the specified player.
 	static interpretDefault = function(playoutResult, player) {
 		return lerp(1-playoutResult, playoutResult, player);
