@@ -2,7 +2,7 @@
 if (is_struct(tree) && !ready) {
 	// Use TCP Reno algorithm to adjust ticksPerStep
 	var referenceFPS = (os_browser == browser_not_a_browser) ? fps_real : fps;
-	if (referenceFPS < room_speed*congestionFactor) {
+	if (referenceFPS < game_get_speed(gamespeed_fps)*congestionFactor) {
 		ticksPerStep = max(ticksPerStep*(1-congestionCut), minTicksPerStep);
 	} else {
 		ticksPerStep += slowStartIncrement;
