@@ -6,8 +6,9 @@ This library provides a basic framework for implementing the [Monte Carlo Tree S
 
 ## Requirements
 
-- GameMaker Studio 2.3.0 or higher
-    - Known issue: This library does not work on the HTML5 export for Runtime 2.3.0.401 due to a bug in the way it handles passed functions/methods.
+GameMaker Studio 2022 / 2.3.7 or higher
+
+If you use 2.3.0 - 2.3.6, please use [v1.0.0](https://github.com/dicksonlaw583/GMTactician_MctsTree/releases/tag/v1.0.0).
 
 ## Installation
 
